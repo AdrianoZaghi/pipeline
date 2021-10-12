@@ -1,0 +1,4 @@
+threads: 10
+ram: 100
+rgi_main_alignment_tool: "BLAST"
+assembly_k_parameter: 55
