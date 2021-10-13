@@ -17,7 +17,7 @@ rule rgi_bwt:
 	shell:
 		"""
 		cd rgi
-		rgi bwt -1 {input[0]} -2 {input[1]} -a bowtie2 -n {config[threads]} --clean --include_wildcard -o ../{wildcards.sample}_bwt --local
+		rgi bwt -1 ../{input[0]} -2 ../{input[1]} -a bowtie2 -n {config[threads]} --clean --include_wildcard -o ../{wildcards.sample}_bwt --local
 		cd ..
 		"""
 
@@ -34,16 +34,16 @@ rule rgi_env_setup:
 		#CARD DATABASE
 		wget -O data https://card.mcmaster.ca/latest/data
 		tar -xvf data ./card.json
-		rgi load --card_json card.json
+		rgi load --card_json card.json --local
 		rgi card_annotation -i card.json > card_annotation.log 2>&1
-		rgi load -i card.json --card_annotation card_database*
+		rgi load -i card.json --card_annotation card_database* --local
 		#WILDCARD DATABASE
 		wget -O wildcard_data.tar.bz2 https://card.mcmaster.ca/latest/variants
 		mkdir -p wildcard
 		tar -xjf wildcard_data.tar.bz2 -C wildcard
 		gunzip wildcard/*.gz
 		rgi wildcard_annotation -i wildcard --card_json card.json -v_non_specificata > wildcard_annotation.log 2>&1
-		rgi load --wildcard_annotation wildcard_database* --wildcard_index wildcard/index-for-model-sequences.txt --card_annotation card_database*
+		rgi load --wildcard_annotation wildcard_database* --wildcard_index wildcard/index-for-model-sequences.txt --card_annotation card_database* --local
 		cd ..
 		"""
 
