@@ -63,7 +63,6 @@ rule trimmomatic:
 		"required_env.yaml"
 	shell:
 		"""
-		wget -O https://github.com/timflutre/trimmomatic/tree/master/adapters
 		trimmomatic PE -threads {config[threads]} -phred33 -trimlog trimlog.txt {input} {output[0]} {wildcards.sample}_1_trimS.fastq.gz {output[1]} {wildcards.sample}_2_trimS.fastq.gz ILLUMINACLIP:adapters/TruSeq3-PE.fa:2:30:10 LEADING:3 TRAILING:3 SLIDINGWINDOW:4:15 MINLEN:36
 		rm {wildcards.sample}_1_trimS.fastq.gz
 		rm {wildcards.sample}_2_trimS.fastq.gz
