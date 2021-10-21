@@ -7,4 +7,9 @@ Dopo di che si può eseguire il comando
 Per il funzionamento della pipeline dovrebbe bastare uno snakemake envoirement ed aver installato anaconda.
 Questa infatti è predisposta per installare automaticamente tutte le dipendenze richieste.
 
+Utilizzando il comando 
 
+	snakemake report.out --report
+
+Viene prodotto il report riguardante tutti i campioni che sono contenuti nel file "data_links.json"
+Questo report allo stato attuale contiene solo alcune voci salienti dell analisi di FastQC sulle read libraries prima e dopo il trimming
