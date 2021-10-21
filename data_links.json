@@ -1,6 +1,42 @@
 {
-   "ERR2241624":[
-      "ftp://ftp.sra.ebi.ac.uk/vol1/fastq/ERR224/004/ERR2241624/ERR2241624_1.fastq.gz",
-      "ftp://ftp.sra.ebi.ac.uk/vol1/fastq/ERR224/004/ERR2241624/ERR2241624_2.fastq.gz"
-   ]
+"ERR2241631":[
+	"ftp://ftp.sra.ebi.ac.uk/vol1/fastq/ERR224/001/ERR2241631/ERR2241631_1.fastq.gz",
+	"ftp://ftp.sra.ebi.ac.uk/vol1/fastq/ERR224/001/ERR2241631/ERR2241631_2.fastq.gz"
+	],
+"ERR2241632":[
+	"ftp://ftp.sra.ebi.ac.uk/vol1/fastq/ERR224/002/ERR2241632/ERR2241632_1.fastq.gz",
+	"ftp://ftp.sra.ebi.ac.uk/vol1/fastq/ERR224/002/ERR2241632/ERR2241632_2.fastq.gz"
+	],
+"ERR2241633":[
+	"ftp://ftp.sra.ebi.ac.uk/vol1/fastq/ERR224/003/ERR2241633/ERR2241633_1.fastq.gz",
+	"ftp://ftp.sra.ebi.ac.uk/vol1/fastq/ERR224/003/ERR2241633/ERR2241633_2.fastq.gz"
+	],
+"ERR2241634":[
+	"ftp://ftp.sra.ebi.ac.uk/vol1/fastq/ERR224/004/ERR2241634/ERR2241634_1.fastq.gz",
+	"ftp://ftp.sra.ebi.ac.uk/vol1/fastq/ERR224/004/ERR2241634/ERR2241634_2.fastq.gz"
+	],
+"ERR2241635":[
+	"ftp://ftp.sra.ebi.ac.uk/vol1/fastq/ERR224/005/ERR2241635/ERR2241635_1.fastq.gz",
+	"ftp://ftp.sra.ebi.ac.uk/vol1/fastq/ERR224/005/ERR2241635/ERR2241635_2.fastq.gz"
+	],
+"ERR2241636":[
+	"ftp://ftp.sra.ebi.ac.uk/vol1/fastq/ERR224/006/ERR2241636/ERR2241636_1.fastq.gz",
+	"ftp://ftp.sra.ebi.ac.uk/vol1/fastq/ERR224/006/ERR2241636/ERR2241636_2.fastq.gz"
+	],
+"ERR2241637":[
+	"ftp://ftp.sra.ebi.ac.uk/vol1/fastq/ERR224/007/ERR2241637/ERR2241637_1.fastq.gz",
+	"ftp://ftp.sra.ebi.ac.uk/vol1/fastq/ERR224/007/ERR2241637/ERR2241637_2.fastq.gz"
+	],
+"ERR2241638":[
+	"ftp://ftp.sra.ebi.ac.uk/vol1/fastq/ERR224/008/ERR2241638/ERR2241638_1.fastq.gz",
+	"ftp://ftp.sra.ebi.ac.uk/vol1/fastq/ERR224/008/ERR2241638/ERR2241638_2.fastq.gz"
+	],
+"ERR2241640":[
+	"ftp://ftp.sra.ebi.ac.uk/vol1/fastq/ERR224/000/ERR2241640/ERR2241640_1.fastq.gz",
+	"ftp://ftp.sra.ebi.ac.uk/vol1/fastq/ERR224/000/ERR2241640/ERR2241640_2.fastq.gz"
+	],
+"ERR2241642":[
+	"ftp://ftp.sra.ebi.ac.uk/vol1/fastq/ERR224/002/ERR2241642/ERR2241642_1.fastq.gz",
+	"ftp://ftp.sra.ebi.ac.uk/vol1/fastq/ERR224/002/ERR2241642/ERR2241642_2.fastq.gz"
+	]
 }
