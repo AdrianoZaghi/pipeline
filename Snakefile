@@ -3,6 +3,45 @@ from urllib import request
 
 configfile: "config.yaml"
 
+dati = json.load(open("data_links.json"))
+names = []
+campioni = []
+for s in dati.keys():
+	campioni.append(s)
+        names.append(s+"_1")
+        names.append(s+"_2")
+        names.append(s+"_1_trimP")
+        names.append(s+"_2_trimP")
+print(names)
+
+rule all:
+	input:
+		expand("{s}_bwt.allele_mapping_data.json", s=campioni)
+#	conda:
+#		"required_env.yaml"
+		
+
+rule main:
+	input:
+		"{sample}_assembly/contigs.fasta"
+	output:
+		"{sample}_main.json"
+	conda:
+		"required_env.yaml"
+	shell:
+		"rgi main {input} -o {wildcards.sample}_main -t contig -a {config[rgi_main_alignment_tool]} --clean -n {config[threads]} -d wgs --split_prodigal_jobs"
+
+rule assembly:
+	input:
+		"{sample}_1_trimP.fastq.gz",
+		"{sample}_2_trimP.fastq.gz"
+	output:
+		"{sample}_assembly/contigs.fasta"
+	conda:
+		"required_env.yaml"
+	shell:
+		"spades.py -1 {input[0]} -2 {input[1]} -t {config[threads]} -m {config[ram]} -k {config[assembly_k_parameter]} -o {wildcards.sample}_assembly"
+
 rule rgi_bwt:
 	input:
 		"{sample}_1_trimP.fastq.gz",
@@ -72,16 +111,6 @@ rule trimmomatic:
 		rm {wildcards.sample}_2_trimS.fastq.gz
 		"""
 
-
-dati = json.load(open("data_links.json"))
-names = []
-for s in dati.keys():
-	names.append(s+"_1")
-	names.append(s+"_2")
-	names.append(s+"_1_trimP")
-	names.append(s+"_2_trimP")
-print(names)
-
 rule reportrule:
 #segui questo link per vedere come si usa la list comprehension https://www.w3schools.com/python/python_lists_comprehension.asp
 	input:
@@ -124,5 +153,4 @@ rule get_data:
 		shell("wget --tries=10 " + dati[wildcards.sample][1])
 #-------------------------------------------------------------------------------
 
-#capire come ottenere il report
 #implementa un modo di scartare le contigs troppo corte dopo l'assembly
