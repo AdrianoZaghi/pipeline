@@ -10,3 +10,4 @@ dependencies:
 - java-jdk = 7.0.91
 - trimmomatic = 0.39
 - fastqc = 0.11.9
+- spades = 3.15.3
