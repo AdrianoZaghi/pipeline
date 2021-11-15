@@ -1,4 +1,20 @@
-threads: 10
+threads: 8
 ram: 100
 rgi_main_alignment_tool: "BLAST"
 assembly_k_parameter: 55
+trim_seed_mismatch: 2
+#specifies the maximum mismatch count which will still allow a full match to be performed
+trim_palindrome_clip_threshold: 30
+#specifies how accurate the match between any adapter etc. sequence must be against a read.
+trim_simple_clip_threshold: 10
+#specifies how accurate the match between the two 'adapter ligated' reads must be for PE palindrome read alignment.
+trim_window_size: 4
+#Grandezza della finestra di investigazione per la qualità
+trim_quality_required: 15
+#minima qualità richiesta all'interno della finestra di investigazione
+trim_leading_quality: 3
+#mimimum quality to stop removing bases from the start of the read
+trim_trailing_quality: 3
+#minimum quality to stop removing bases from the end of the read
+trim_minlen: 36
+#minima lunghezza per non scartare una read dopo il trimming
