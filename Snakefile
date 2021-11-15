@@ -12,7 +12,7 @@ for s in dati.keys():
         names.append(s+"_2")
         names.append(s+"_1_trimP")
         names.append(s+"_2_trimP")
-print(names)
+#print(names)
 
 rule all:
 	input:
@@ -106,7 +106,7 @@ rule trimmomatic:
 		"required_env.yaml"
 	shell:
 		"""
-		trimmomatic PE -threads {config[threads]} -phred33 -trimlog trimlog.txt {input} {output[0]} {wildcards.sample}_1_trimS.fastq.gz {output[1]} {wildcards.sample}_2_trimS.fastq.gz ILLUMINACLIP:adapters/NEXTflex_96.fa:2:30:10 LEADING:3 TRAILING:3 SLIDINGWINDOW:4:15 MINLEN:36
+		trimmomatic PE -threads {config[threads]} -phred33 -trimlog trimlog.txt {input} {output[0]} {wildcards.sample}_1_trimS.fastq.gz {output[1]} {wildcards.sample}_2_trimS.fastq.gz ILLUMINACLIP:adapters/NEXTflex_96.fa:{config[trim_seed_mismatch]}:{config[trim_palindrome_clip_threshold]}:{config[trim_simple_clip_threshold]} LEADING:{config[trim_leading_quality]} TRAILING:{config[trim_trailing_quality]} SLIDINGWINDOW:{config[trim_window_size]}:{config[trim_quality_required]} MINLEN:{config[trim_minlen]}
 		rm {wildcards.sample}_1_trimS.fastq.gz
 		rm {wildcards.sample}_2_trimS.fastq.gz
 		"""
