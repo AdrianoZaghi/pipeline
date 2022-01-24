@@ -4,10 +4,14 @@ from urllib import request
 configfile: "config.yaml"
 
 dati = json.load(open("data_links.json"))
+
+#names sono usati per il report
 names = []
-campioni = []
+
+#sono usati per la rule all
+campioni = ["ERR2241631", "ERR2241632", "ERR2241634", "ERR2241635", "ERR2241637"]
 for s in dati.keys():
-	campioni.append(s)
+#	campioni.append(s)
         names.append(s+"_1")
         names.append(s+"_2")
         names.append(s+"_1_trimP")
@@ -16,7 +20,7 @@ for s in dati.keys():
 
 rule all:
 	input:
-		expand("{s}_bwt.allele_mapping_data.json", s=campioni)
+		expand("{s}_main.json", s=campioni)
 #	conda:
 #		"required_env.yaml"
 		
@@ -29,7 +33,7 @@ rule main:
 	conda:
 		"required_env.yaml"
 	shell:
-		"rgi main {input} -o {wildcards.sample}_main -t contig -a {config[rgi_main_alignment_tool]} --clean -n {config[threads]} -d wgs --split_prodigal_jobs"
+		"rgi main -i {input} -o {wildcards.sample}_main -t contig -a {config[rgi_main_alignment_tool]} --clean -n {config[threads]} -d wgs --split_prodigal_jobs"
 
 rule assembly:
 	input:
