@@ -1,4 +1,4 @@
-#ESECUZIONIE DELLA PIPELINE
+# ESECUZIONIE DELLA PIPELINE
 
 Allo stato attuale, la pipeline è predisposta per completare un alignment ai database CARD e wildcard attraverso bowtie2.
 Per eseguirla è necessario aggiungere al file *data_links.json* i link delle reads library che si intende analizzare, con etichetta uguale alla run accession del campione.
@@ -17,7 +17,7 @@ Nel caso ci si appresti a un analisi in parallelo di più campioni sarà necessa
 Per il funzionamento della pipeline dovrebbe bastare uno snakemake envoirement ed aver installato anaconda.
 Questa infatti è predisposta per installare automaticamente tutte le dipendenze richieste.
 
-##REPORT
+## REPORT
 
 Utilizzando il comando 
 
@@ -26,7 +26,7 @@ Utilizzando il comando
 Viene prodotto il report riguardante tutti i campioni che sono contenuti nel file *data_links.json*
 Questo report allo stato attuale contiene solo alcune voci salienti dell analisi di FastQC sulle read libraries prima e dopo il trimming
 
-#TESTING
+# TESTING
 
 Per compiere il testing della pipeline è utilizzato pytest.
 Il testing viene eseguito utilizzando dei dati prodotti appositamente e che si trovano nella directory *test_dir*.
