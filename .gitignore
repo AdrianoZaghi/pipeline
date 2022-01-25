@@ -1,0 +1,8 @@
+#ignora tutti gli output della pipeline
+ERR*
+#ignora altre cosa
+.snakemake/
+report.html
+__pycache__
+trimlog.txt
+rgi/
