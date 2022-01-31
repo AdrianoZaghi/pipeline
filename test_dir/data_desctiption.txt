@@ -1,0 +1,5 @@
+trim_test_data sono stati generati da uno script: trimmomatic_test_reandreads.py
+bwt_test_data è stato ottenuto attrevarso il subsampling del campione ERR2241634. Successivamente è stato trimmato
+reads_for_test_spades* sono stati creati utilizzando ART_illumia, prendendo come input il file contig_for_tests.fastq
+dentro a main test data si trova il prodotto della funzione split contigs, opportunamente rinominata.
+	qiesta funzione prende le prime n contigs dal file "original_contigs.fastq" (argomento standard) o da altri file specificati
