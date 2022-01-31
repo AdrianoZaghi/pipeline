@@ -3,6 +3,10 @@ ERR*
 #ignora altre cosa
 .snakemake/
 report.html
-__pycache__
+__pycache__/
+test_dir/__pycache__/test_pipeline.cpython-39-pytest-6.2.5.pyc
+test_dir/main_test_data_main*
+test_dir/original_contigs.fasta
+test_dir/split_conttigs.py
 trimlog.txt
 rgi/

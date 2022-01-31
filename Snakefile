@@ -9,7 +9,8 @@ dati = json.load(open("data_links.json"))
 names = []
 
 #sono usati per la rule all
-campioni = ["ERR2241631", "ERR2241632", "ERR2241634", "ERR2241635", "ERR2241637"]
+#campioni = ["ERR2241631", "ERR2241632", "ERR2241634", "ERR2241635", "ERR2241637"]
+campioni = ["ERR2241637"]
 for s in dati.keys():
 #	campioni.append(s)
         names.append(s+"_1")
@@ -33,7 +34,13 @@ rule main:
 	conda:
 		"required_env.yaml"
 	shell:
-		"rgi main -i {input} -o {wildcards.sample}_main -t contig -a {config[rgi_main_alignment_tool]} --clean -n {config[threads]} -d wgs --split_prodigal_jobs"
+		"""
+		cd rgi
+		rgi main -i ../{input} -o {wildcards.sample}_main -t contig -a {config[rgi_main_alignment_tool]} --clean -n {config[threads]} -d wgs --split_prodigal_jobs
+		mv {wildcards.sample}_main.txt ../{wildcards.sample}_main.txt
+		mv {wildcards.sample}_main.json ../{wildcards.sample}_main.json
+		cd ..
+		"""
 
 rule assembly:
 	input:
