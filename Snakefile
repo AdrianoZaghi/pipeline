@@ -1,5 +1,5 @@
+
 import json
-from urllib import request
 
 configfile: "config.yaml"
 
@@ -8,22 +8,11 @@ dati = json.load(open("data_links.json"))
 #names sono usati per il report
 names = []
 
-#sono usati per la rule all
-#campioni = ["ERR2241631", "ERR2241632", "ERR2241634", "ERR2241635", "ERR2241637"]
-campioni = ["ERR2241637"]
 for s in dati.keys():
-#	campioni.append(s)
         names.append(s+"_1")
         names.append(s+"_2")
         names.append(s+"_1_trimP")
         names.append(s+"_2_trimP")
-#print(names)
-
-rule all:
-	input:
-		expand("{s}_main.json", s=campioni)
-#	conda:
-#		"required_env.yaml"
 		
 
 rule main:
