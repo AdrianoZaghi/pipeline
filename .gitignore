@@ -4,7 +4,7 @@ ERR*
 .snakemake/
 report.html
 __pycache__/
-test_dir/__pycache__/test_pipeline.cpython-39-pytest-6.2.5.pyc
+test_dir/__pycache__/*
 test_dir/bwt_test_subsampling.py
 test_dir/main_test_data_main*
 test_dir/original_contigs.fasta
