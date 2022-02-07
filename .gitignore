@@ -4,10 +4,6 @@ ERR*
 .snakemake/
 report.html
 __pycache__/
-test_dir/__pycache__/*
-test_dir/bwt_test_subsampling.py
-test_dir/main_test_data_main*
-test_dir/original_contigs.fasta
-test_dir/split_conttigs.py
+test_dir/__pycache__/
 trimlog.txt
 rgi/
