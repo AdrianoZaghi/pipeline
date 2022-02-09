@@ -1,10 +1,10 @@
-#PIPELINE INSTALLING
+# PIPELINE INSTALLING
 
 In order to install all the tools used you should just clone this repo and run the pipeline for the first time. The only requirements are the previous installation of SNAKEAMAKE and ANACONDA (or MAMBA). During the installation will be set up the environment required for rgi to work. The installation is local and at the end of it a new *rgi/* repo will be found. It contains all the references to Card and WildCard  database. If you intend to execute the installation only, you can launch the command
 
 	snakemake rgi/card_annotation.log --core 10 --use-conda
 
-#PIPELINE SET UP
+# PIPELINE SET UP
 
 The pipeline is made to align read libraries to the antibiotic resistance databases Card and WildCard. Input files should be pair end read libraries compressed (.gz). File names should be provided in the form of *<run_accession>*_n.fastq.gz, where “n” should be 1 or 2 depending if the reads in the library are the forward or the backward once of the sample. To perform the alignment can be used two different methods:
 - reads can be aligned directly to the references exploiting bowtie2
@@ -15,7 +15,7 @@ To run entirely the pipeline (one of the two branches) you should add to the *da
 
 At the beginning of the execution, data will be downloaded in the working directory. Their filename should match the standard required, but is surely worth a check. The links actually present in the *data_links.json* file refers to data from a study performed by Munk ef all. [2018]. In case the data ere already on your device and have a correct filename, the pipeline will skip the downloads, but is still useful to fill the “<run_accession>” part of the *data_links.json* file. This will enable the report.
 
-#PIPELINE EXECUTION
+# PIPELINE EXECUTION
 
 After completing the setting up, the pipeline can be executed requesting to snakemake the output file of one fo the two branches. In this way are executed all the rules required to obtain it. In case you want to perform an alignment with bowtie2:
 
@@ -61,7 +61,7 @@ In the place of *"cores"* should be put the number of threads dedicated to pipel
 
 
 
-#REPORT
+# REPORT
 
 Using the command:
 
@@ -75,7 +75,7 @@ Is produced the report (*report.html*). It regards all the samples referenced in
 Those graphs are obtained from FastQC [link](https://www.bioinformatics.babraham.ac.uk/projects/fastqc/). Notice that, if the trimming is not already been executed, it will be done before producing the report.
 
 
-#TESTING
+# TESTING
 
 To test the functionality of the pipeline is used *pytest*. Ad hoc data are used to perform tests. Those can be found in the *test_dir* directory.
 
@@ -100,5 +100,3 @@ Possivle [marker] values are:
 - bwt
 - spades
 - main
-
-
