@@ -1,112 +1,104 @@
-# INSTALLAZIONE DELLA PIPELINE
+#PIPELINE INSTALLING
 
-Per installare i tool impiegati in questa pipeline è sufficiente clonare questa git repo.
-Unici requisiti fondamentali sono la precedente intallazione di SNAKEMAKE e ANACONDA.
-La prima volta che si eesegue un allineamento, saranno installati tutti i programmi richiesti e sarà predisposto l'envoirment per il funzionamento di rgi.
-L'installazione è locale e al termine sarà presente nella working directory una repository *rgi/*, contenente i riferimenti ai database Card e WildCard. 
-Per eseguire esclusivamente l'installazione è possibile lanciare il comando
+In order to install all the tools used you should just clone this repo and run the pipeline for the first time. The only requirements are the previous installation of SNAKEAMAKE and ANACONDA (or MAMBA). During the installation will be set up the environment required for rgi to work. The installation is local and at the end of it a new *rgi/* repo will be found. It contains all the references to Card and WildCard  database. If you intend to execute the installation only, you can launch the command
 
 	snakemake rgi/card_annotation.log --core 10 --use-conda
 
-# ESECUZIONIE DELLA PIPELINE
+#PIPELINE SET UP
 
-La pipeline è predisposta per allineare read libraries ai database sull'antibiotico resistenza CARD e wildcard.
-I file di inpput devono essere due read libraries pair end e devono essere compresse (.gz).
-Sono disponibili due modalità per completare questo compito: si può sfruttare l'algoritmo bowtie2 per allineare direttamente le reads ai resistomi di riferimento, oppure comporre un assembly delle reads utilizzando Spades e poi allineare le contigs ottenute ai resistomi (utilizzando Dimond o Blast)
-Per eseguire interamente uno dei due rami della pipeline è necessario aggiungere al file *data_links.json* i link delle reads library che si intende analizzare, con etichetta uguale alla run accession del campione.
+The pipeline is made to align read libraries to the antibiotic resistance databases Card and WildCard. Input files should be pair end read libraries compressed (.gz). File names should be provided in the form of *<run_accession>*_n.fastq.gz, where “n” should be 1 or 2 depending if the reads in the library are the forward or the backward once of the sample. To perform the alignment can be used two different methods:
+- reads can be aligned directly to the references exploiting bowtie2
+- otherwise can be composed an assembly of those reads using Spades and than the resulting contigs are aligned to the references (using Dimond or Blast, depending on the configuration of the pipeline)
+To run entirely the pipeline (one of the two branches) you should add to the *data_links.json* file the links to the the online read libraries you intend to analyze, with the following sintax.
 
 	"<run_accession>" : ["link_1", "link_2"]
 
-Si osservi il file citato per un esempio, i link attualmente presenti sono riferiti ai dati di Munk et all. [2018].
-Fatto questo si può richiedere a snakemake il file di output di uno dei due rami, in modo che vengano eseguite tutte le rules che sono necessarie ad ottenerlo
-Se si vuole allineare un campione con bowtie2:
-	
+At the beginning of the execution, data will be downloaded in the working directory. Their filename should match the standard required, but is surely worth a check. The links actually present in the *data_links.json* file refers to data from a study performed by Munk ef all. [2018]. In case the data ere already on your device and have a correct filename, the pipeline will skip the downloads, but is still useful to fill the “<run_accession>” part of the *data_links.json* file. This will enable the report.
+
+#PIPELINE EXECUTION
+
+After completing the setting up, the pipeline can be executed requesting to snakemake the output file of one fo the two branches. In this way are executed all the rules required to obtain it. In case you want to perform an alignment with bowtie2:
+
 	snakemake <run_accesion>_bwt.allele_mapping_data.json --core <cores> --use-conda
 
-Al termine dell'esecuzione saranno presenti i file:
+At the end of the execution should be found, in the working directory, the following files:
 - <run_accession>_bwt.allele_mapping_data.json
 - <run_accession>_bwt.allele_mapping_data.txt
 - <run_accession>_bwt.overall_mapping_stats.json
 
-I primi due contengono entrambi il risultato dell'assembly e il terzo alcune statistiche relative al processo di allineamento.
-Si faccia riferimento alla documentazione di rgi (https://github.com/arpcard/rgi#running-rgi-main-with-genome-or-assembly-dna-sequences) per il significato delle voci di questi file.
-A seconda di quale sia il punto di partenza del processo, saranno presenti anche tutti i file generati dalle altre rules utilizzate per ottenere l'allineamento.
-Si faccia riferimento alla struttura della piepline per capire quali.
+First two files contain the results of the alignment and the third contains some statistics about the alignment process, provided by rgi. You should refer to rgi documentation [link](https://github.com/arpcard/rgi#running-rgi-main-with-genome-or-assembly-dna-sequences) for the explanation of such output content. Depending from what the starting point of the analysis is, in the working directory will be found also all the files produced by the rules used in the alignment. Look at the picture of pipeline structure to figure out what they are.
 
-Se si vuole allineare un campione componendo prima un assembly con Spades:
+If you want to align a sample composing the assembly and then using Dimond or Blast:
 
-	snakemake <run accesion>_main.json --core <cores> --use-conda
+	snakemake <run accesion>_main.json --core "cores" --use-conda
 
-Al termine dell'esecuzione saranno presenti i file:
+At the end of the process will be found, in the working directory, the following output files:
 - <run_accession>_main.json
 - <run_accession>_main.txt
 
-Entrambi contengono il risultato dell'assembly.
-Si faccia riferimento alla documentazione di rgi [link](https://github.com/arpcard/rgi#running-rgi-main-with-genome-or-assembly-dna-sequences) per il significato delle voci di questi file.
-A seconda di quale sia il punto di partenza del processo, saranno presenti anche tutti i file generati dalle altre rules utilizzate per ottenere l'allineamento.
-Si faccia riferimento alla struttura della piepline per capire quali.
+Both contain the results of the alignment. You should again refer to tgi documentation [link](https://github.com/arpcard/rgi#running-rgi-main-with-genome-or-assembly-dna-sequences) for the explanation of the content of those files. Depending from what the starting point of the analysis is, in the working directory will be found also all the files produced by the rules used in the alignment. Look at the picture of pipeline structure to figure out what they are.
 
-È possibile anche eseguire singolarmente ogni step della pipeline:
-- Scaricare i file dai link riportati nel file *data_links.json*
-Al termine saranno presenti nella working directory le read libraries scaricate
+It is possible to run each step of the pipeline singularly:
 
-	snakemake <run_accession>_1.fastq.gz --core <core> --use-conda
+- Download the data from links in *data_links.json*. At the end you will find the data in the working directory.
 
-- Eseguire il trimming pair end delle librerie. Per questa operazione sono utilizzate le sequenze degli adapter contenute nella directory *adapters/* e basta aggiungere in questa un altri .fa file per includere altri adapter nel trimming.
-Al termine saranno presenti nella working directory le read libraries trimmate.
+	 snakemake <run_accession>_1.fastq.gz --core "cores" --use-conda
 
-	snakemake <run_accession>_1_trimP.fastq.gz --core <core> --use-conda
+- Perform read library trimming trimming (pair end). For this task are used the adapter sequences contained in the *adaprers/* dir. To include new adapters in the trimming other *.fa* file should be added to this directory. At the end of this operation trimmed read libraries will be found in the working directory.
 
-- Eseguire l'assembly.
-Al termine sarà presente nella working directory una directory chiamata *<run_accessio>_assembly/*, in essa sono contenuti i file risultanti dall'assembly
+	snakemake <run_accession>_1_trimP.fastq.gz --core "cores" --use-conda
 
-	snakemake <run_accession>_assembly/contigs.fasta --core <core> --use-conda
+- Perform the assembly. At the end of this task in the working directory will be found *<run_accession>_assembly/*. In it are contained assembly results
 
-Al posto di <core> andrà inserito il numero di threads che si intende dedicare alla pipeline.
-Nel file *config.yaml* si può specificare qunati threads dedicare all'elaborazione di un singolo campione (8 di default), qulora si decidesse di allineare più campioni contemporaneamente.
-Nello stesso file sono stabiliti altri parametri per l'esecuzione della pipeline, la cui funzione è riassunta nello stesso, ma per informazioni più dettagliate si rimanda alla documentazione dei tools utilizzati:
+	snakemake <run_accession>_assembly/contigs.fasta --core "cores" --use-conda
 
+Is quite hard to estimate the computational resources required for each step of the pipeline, but all of them are quite expensive. Mainly the assembly. I suggest to execute reach step singularly, at the first usage.
+
+In the place of *"cores"* should be put the number of threads dedicated to pipeline execution. In the *config.yaml* file you can specify how many threads dedicate to the processing of a single sample (8 default), in case you are aligning more then one sample at once. In the same file are sett some other parameters for pipeline execution. Their meaning is explained in that file, but for more information you should refer to the documentation of those specific tools.
 - Ttimmomatic: [link](http://www.usadellab.org/cms/?page=trimmomatic)
 - Spades: [link](https://cab.spbu.ru/files/release3.15.2/manual.html)
 - Rgi: [link](https://github.com/arpcard/rgi#running-rgi-main-with-genome-or-assembly-dna-sequences)
 
 
-## REPORT
 
-Utilizzando il comando 
+#REPORT
+
+Using the command:
 
 	snakemake report.out --report
 
-Viene prodotto il report (*report.html*) riguardante tutti i campioni che sono contenuti nel file *data_links.json*
-Questo file contiene, per ogni read library, trimmata e non:
-- La distribuzione delle lunghezze delle reads
-- La distribuzione della qualità media delle basi in ogni read
-- Loccorrenza degli adapters in ogni read library
-Questi grafici sono ottenuti da FastQC.
-Si tenga presente che, se non si è già eseguito il trimming, questo verrà eseguito prima di ottenere l'output
+Is produced the report (*report.html*). It regards all the samples referenced in the file *data_links.json*. This report contains, for each read library, trimmed and non trimmed:
+- length distribution of reads
+- average quality distribution for the n-th base of all the reads
+- occurrence of adapters in each read library
 
-# TESTING
+Those graphs are obtained from FastQC [link](https://www.bioinformatics.babraham.ac.uk/projects/fastqc/). Notice that, if the trimming is not already been executed, it will be done before producing the report.
 
-Per compiere il testing della pipeline è utilizzato pytest.
-Il testing viene eseguito utilizzando dei dati prodotti appositamente e che si trovano nella directory *test_dir*.
-In essa si trovano anche gli script atti a generare detti dati:
-- trimmomatic_test_reds.py
-- bwt_test_subsampling.py
-- get_spades_test_data.sh
-- split_contigs.py
-Nel file data_description.txt è spiegato come sono stati usati questi script per produrre i dati allegati e utilizzati per il testing.
-Quando si abbia installato questo programma, è possibile testare tutta la pipeline con il comando (lanciato dalla directory principale).
+
+#TESTING
+
+To test the functionality of the pipeline is used *pytest*. Ad hoc data are used to perform tests. Those can be found in the *test_dir* directory.
+
+- *trim_test_data* are generated using the script *trimmomatic_test_rendreads.py*. Those are .fastq file containing pair end reads randomly generated. Those have null superposition. In those reads are added the NextFlex-96 adapters.
+
+- *bwt_test_data* is obtained subsampling the sample ERR2241634 (already trimmed). To do this have been used the script *bwt_test_subsampling.py*
+
+- *reads_for_test_spades* have been created using ART_illumia. The command used is reported in *get_spades_test_data.sh* and require to have an *original_contig.fasta* file in *test_dir/*. Because of usual dimensions of .fasta file, original_contig.fasta is not included in this directory .Anyway whatever .fasta file can be used.
+
+- In the directory *main_test_data/* can be found the output of the script *split_contigs.py*. This function compose, from the mentioned *original_contig.fasta*, a new .fasta file, containing the first n contigs of the original
+
+In order perform the tests, you should run, in the working directory, the command
 
 	pytest test_dir/test_pipeline.py
 
-Nel caso si voglia testare una sola rule della pipeline è possibile il sottoinseieme di tests dedicati attraverso i marker di pytest
+In case you want to test just a single rule of the pipeline is possible to specify the required subset of tests to perform, using pytest markers.
 
 	pytest test_dir/test_pipeline.py -m [marker]
 
-I possibili valori di [marker] sono:
+Possivle [marker] values are:
 - trimmomatic
 - bwt
 - spades
 - main
 
-Si consiglia di utilizzare questi ultimi e di non eseguire tutti i tests assieme, potrebbe richiedere molto tempo.
+
