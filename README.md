@@ -1,3 +1,7 @@
+# PIPELINE SCHEME
+
+![Image](dag.svg)
+
 # PIPELINE INSTALLING
 
 In order to install all the tools used you should just clone this repo and run the pipeline for the first time. The only requirements are the previous installation of SNAKEAMAKE and ANACONDA (or MAMBA). During the installation will be set up the environment required for rgi to work. The installation is local and at the end of it a new *rgi/* repo will be found. It contains all the references to Card and WildCard  database. If you intend to execute the installation only, you can launch the command

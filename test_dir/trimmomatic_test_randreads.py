@@ -2,14 +2,13 @@ from numpy import random
 import os
 
 def quality_casting(i):
-	"""Converte valori numerici (tra 0 e 1) della nel codice di qualità del formato fastq
-	Nel caso i > 1 o i < 0 viene effettuato un clipping e si assegna il valore massimo o minimo di qualità, rispettivamente 
+	"""Convert numerichal values (between 0 and 1) in the quality codification of .fastq format
+	The only argument is the numerichal value to convert and is returned the character resulting from the convertion
+	In case i > 1 or i < 0, the returned dalue will be the higher ('~') or the lower ('!') quality character
 	"""
 	if i >= 1:
-#		print("qualità troppo alta, clipping effettuato")
 		return "~"
 	if i <= 0:
-#		print("qualità troppo bassa, clipping effettuato")
 		return "!"
 	letters = """!"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`abcdefghijklmnopqrstuvwxyz{|}~"""
 	return letters[int(i*94)]
@@ -21,16 +20,17 @@ def const_quality(i):
 	return 0.4
 
 def write_read(name, read_length, adapter, adapter_end_position, quality_distribution, parameter_of_quality_distribution = 0):
-	"""Returna una lista di 4 stringhe che contengono:
-		Nome della read, che sarà uguale a "name"
-		Sequenza di basi della read: le basi sono estratte a random, è lunga "read_length" e ci viene sovrascritta una la sequenza dell'"adapter"
-			La sovrascrittura dell'adapter comincia da una base distante "adapter_end_position" dalla fine della read
-			"adapter_end_position" può essere anche <=0: in questo caso l'adapter non sarà introdotto
-			"adapter_end_position" può essere anche > len(adapter), in questo caso l'adapter sarà posizionato come se "adapter_end_position" = len(adapter)
-		+
-		Sequenza dei valori di qualità delle basi: segue la "quality_distribution"
-			questa quality distribution deve avere valori tra 0 e 1 per x da 0 a "read_length", altrimenti viene fatto il clipping
-			queste distribuzioni sono munite di un parametro per poter essere diversificata quando le reads sono prodotte in serie
+	"""This function returns "read", a 4 string list that contains the 4 fields that a .fastq file dedicates to a read:
+	read[0]		Read name, it will be equal to the function argument "name"
+	read[1]		Base sequence of the read. basis are randomly generated and are in number "read_length".
+				"adapter" sequences wull be overwritten in the final part of them. Will be overwritten "adapter_end_position" basis, starting from end of the read
+				If "adapter_end_position" is <= 0 the adapter is not introduced
+				If "adapter_end_position" is > len(adapter), it will be overwritten as "adapter_end_position" = len(adapter)
+	read[2]		"+"
+	read[3]		Sequence of base quality value. It will follow the "quality_distribution"
+				The distribution passed as argumenmust have a parameter, so that it can vary from read to read when those are generated in serie. It is not necesssary that this parameter is actually used.
+				Values of the distribution are translated into corresponding quality characters as long as those are >= 0 and <= 1.
+				Otherwise the quality value is set to the lowest or the highest possible value
 	"""
 	read = []
 	read.append("@" + name)
@@ -50,47 +50,45 @@ def write_read(name, read_length, adapter, adapter_end_position, quality_distrib
 
 
 def get_trimmomatic_test_data(adapter_1, adapter_2, file_name = "trim_test_data", read_number = 300, read_length = 150, adapter_end_distribution = const_adapter_start, quality_distribution = const_quality):
-	"""Produce due fastq file pair end dal nome "file_name_1.fastq" e "file_name_2.fastq".
-	Ciascuno contiene "read_number" reads di lunghezza "read_length" con basi random, dunque come se l'overlap tra le due sequenze pair ended fosse nullo (caso di Munk)
-	Si introduce in queste reads anche la sequenze di degli "adapter" specificate in argomento (_1 e _2 nei rispettivi file)
-		Queste sequenze sono sovrascritte alle basi random, non per intero, ma solo come se fossero legate a un estremo della sequenza significativa e fossero in parte tagliate
-		Adapter_end_distribution specifica una relazione tra l'indice della read e la posizione di collegamento adapter-sequenza_significativa
-	Va specificata in argomento anche una distribbuzione dei valori di qualità associati alle basi (quality_distribution)
-		questa distribuzione, a seconda di come sia implementaata, può dipenderere dall' indice della read nel campione.
+	"""This function don't return anything, but creates 2 files in the working directory called "file_name"_1.fastq and "file_name"_1.fastq
+	Each of them contains "read_number" reads of length "read_length", composed of ransom bases.
+	Such situation reproduces a pair end read database with null overlap, similar to [Munk et all. 2018] data
+	The two "adapter" (_1 for the _1 file and _2 for the _2 file) sequences are then overwritten to part of the sequences, to one of the margin.
+	"adapter_end_distribution" specify a relation between the adapter end position and the read index, so that, when generating iteratively the reads, those can hav different adapter end position
+	"quality_distribution" specify the distribution of reads base quality. This distribution can depend on an additional parameter (other than the base number)
+		This parameter is suposed to be the index of the read, so that the quality can change from a read to an other
 	"""
-	f_1 = open(file_name + "_1.fastq", 'w')
-	f_2 = open(file_name + "_2.fastq", 'w')
-	for i in range(read_number):
-		read = write_read("read " + str(i) + "_1", read_length, adapter_1, adapter_end_distribution(i), quality_distribution, i)
-		print(read[0], file = f_1)
-		print(read[1], file = f_1)
-		print(read[2], file = f_1)
-		print(read[3], file = f_1)
-		opposit = write_read("read " + str(i) + "_2", read_length, adapter_2, adapter_end_distribution(i), quality_distribution, i)
-		print(opposit[0], file = f_2)
-		print(opposit[1], file = f_2)
-		print(opposit[2], file = f_2)
-		print(opposit[3], file = f_2)
+	with open(file_name + "_1.fastq", mode = 'w', encoding = "utf-8") as f_1, open(file_name + "_2.fastq", mode = 'w', encoding = "utf-8") as f_2:
+		for i in range(read_number):
+			read = write_read("read " + str(i) + "_1", read_length, adapter_1, adapter_end_distribution(i), quality_distribution, i)
+			print(read[0], file = f_1)
+			print(read[1], file = f_1)
+			print(read[2], file = f_1)
+			print(read[3], file = f_1)
+			opposit = write_read("read " + str(i) + "_2", read_length, adapter_2, adapter_end_distribution(i), quality_distribution, i)
+			print(opposit[0], file = f_2)
+			print(opposit[1], file = f_2)
+			print(opposit[2], file = f_2)
+			print(opposit[3], file = f_2)
 
 
 def get_adapters(adapters_file_path = "../adapters/NEXTflex_96.fa", adapter_number = 4):
-	"""cerca nel file dato in argomento la coppia di adapter selezionata da "adapter_number" nel file "adapters_file_path".
-	si presuppone che la riga del nome delgli adapters termini con il loro numero, prima di avere il consueto "/1" o "/2", necessario a distinguere i due adapter pair ended
+	"""This function returns a list of two strings. Those strings contain the 2 adapts indexed by the number "adapter_number": [adapter_1, adapter_2], where 1 is the adapter for forward reads and 2 is the adapter for reverse reads
+	Those adapteres are taken from the file "adapters_file_path". This file should have all the lables of the adapter such that those should end with "<adapter_number>/1" "or <adapter_number>/2"
 	"""
-	f = open(adapters_file_path)
-	look_for = str(adapter_number) + "/1"
-	linea = ""
-	while linea[len(linea)-len(look_for)-1:len(linea)-1] != look_for:
-		linea = f.readline()
-	adapter_1 = f.readline()
-	adapter_1 = adapter_1[0:len(adapter_1)-1]
-	look_for = str(adapter_number) + "/2"
-	while linea[len(linea)-len(look_for)-1:len(linea)-1] != look_for:
-		linea = f.readline()
-	adapter_2 = f.readline()
-	adapter_2 = adapter_2[0:len(adapter_2)-1]
-	print("adapter_1 = " + adapter_1)
-	print("adapter_2 = " + adapter_2)
+	with open(adapters_file_path, mode = 'r', encoding = "utf-8") as f:
+		look_for = str(adapter_number) + "/1"
+		linea = ""
+		while linea[len(linea)-len(look_for)-1:len(linea)-1] != look_for:
+			linea = f.readline()
+		adapter_1 = f.readline()
+		adapter_1 = adapter_1[0:len(adapter_1)-1]
+	with open(adapters_file_path, mode = 'r', encoding = "utf-8") as f:
+		look_for = str(adapter_number) + "/2"
+		while linea[len(linea)-len(look_for)-1:len(linea)-1] != look_for:
+			linea = f.readline()
+		adapter_2 = f.readline()
+		adapter_2 = adapter_2[0:len(adapter_2)-1]
 	return [adapter_1, adapter_2]
 
 #	COMANDO CONSIGLIATO

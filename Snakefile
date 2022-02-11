@@ -16,8 +16,14 @@ for s in dati.keys():
 		
 
 rule main:
+	"""This rule perform the alignment of the contigs to Card and WildCard using rgi main. In the config.yaml file can be set the alignemnt tool
+	Input file	are the databases references, which are set up during installation, and the contig file resulting from the assembly
+	Output file	is a json file whic contains all the information resulting from the assembly. Also a txt version is produced.
+	"""
 	input:
-		"{sample}_assembly/contigs.fasta"
+		"{sample}_assembly/contigs.fasta",
+		"rgi/card_annotation.log",
+		"rgi/wildcard_annotation.log"
 	output:
 		"{sample}_main.json"
 	conda:
@@ -32,6 +38,10 @@ rule main:
 		"""
 
 rule assembly:
+	"""This rule compose the assembly of the trimmed read libraries using spades. In the config.yaml it can be set a limit for RAM usage and the K paramether
+	Input file	are the 2 pair end read libraries, both trimmed
+	Output file	are contained in the directory {run_accession}_assembly. Beside some information about assembly process, the most important file is contigs.fasta
+	"""
 	input:
 		"{sample}_1_trimP.fastq.gz",
 		"{sample}_2_trimP.fastq.gz"
@@ -43,6 +53,10 @@ rule assembly:
 		"spades.py -1 {input[0]} -2 {input[1]} -t {config[threads]} -m {config[ram]} -k {config[assembly_k_parameter]} -o {wildcards.sample}_assembly"
 
 rule rgi_bwt:
+	"""This rule perform the alignement of the trimmed reads to Card and WildCard databases using rgi bwt
+	Input file	are the databases references, which are set up during installation and the 2 pair end read libraries, both trimmed
+	Output file	is a json file whic contains all the information resulting from the assembly. Also a txt version is produced.
+	"""
 	input:
 		"{sample}_1_trimP.fastq.gz",
 		"{sample}_2_trimP.fastq.gz",
@@ -65,6 +79,10 @@ rule rgi_bwt:
 		"""
 
 rule rgi_env_setup:
+	"""This rule download the references to the databases Card and WildCard and load both of them in rgi, so that those can be used for the alignment
+	It don't require any input file since this operation have to be done in order to set up the envoirement for the pipeline to work
+	Output file	are contained in the new created folder rgi/ , those are the references to the two databases
+	"""
 	output:
 		"rgi/card_annotation.log",
 		"rgi/wildcard_annotation.log"
@@ -91,9 +109,9 @@ rule rgi_env_setup:
 		"""
 
 rule trimmomatic:
-	"""
-	trimming rule
-	in questa parte del workflow vengono rimossi gli adapter dalle reads 
+	"""This rule perform the pair end trimming of the read libraries eliminating the NextFles-96 adapters. Is used trimmomatic and all of it's parameters can be set in the config.yaml file.
+	Input files	are the non trimmed read libraries
+	Output files	are the trimmed read libraries
 	"""
 	input:
 		"{sample}_1.fastq.gz",
@@ -112,7 +130,10 @@ rule trimmomatic:
 		"""
 
 rule reportrule:
-#segui questo link per vedere come si usa la list comprehension https://www.w3schools.com/python/python_lists_comprehension.asp
+	"""This rule create a report about the read libraries mentioned in the data_links.json file. It regards both the trimmed and untrimmed version
+	Input files	are the read libraries
+	Output files	are an empthy file report.out and the file report.html, which contain important stathistics about the read libraries, provided by FastQC
+	"""
 	input:
 		[name + ".fastq.gz" for name in names]
 	output:
@@ -132,17 +153,11 @@ rule reportrule:
 		cd ..
 		"""
 
-#devo ordinare bene le voci di questo report in modo tale che si possa capire da che read_lib vengono, forse dovrò modificare il nome del file
-#agiungere sequence length e overrepresented sequences?
-
 rule get_data:
+	"""This rule download all the reads libraries mentioned in the data_links.json file
+	Even if the data_links.json file is required for this rule execution, it is not an input file. In this the rule is not executed again each time the links are modified, but just when a non existing sample is required
+	Output data are the two pair end read libraries
 	"""
-	scarica i dati che sono presenti nel config file
-	tecnicamente richiede come input il file data_links.json, ma è meglio limitarsi ad usarlo solo nella linea di comando
-	altrimenti ogni volta che modifico il file, visto che l'ultima modifica all'input è più recente dell'output, anche tutti i campioni già scaricati vengono riscaricati
-	"""
-#	input:
-#		"data_links.json"
 	output:
 		"{sample}_1.fastq.gz",
 		"{sample}_2.fastq.gz"
@@ -151,6 +166,3 @@ rule get_data:
 		dati = json.load(f)
 		shell("wget --tries=10 " + dati[wildcards.sample][0])
 		shell("wget --tries=10 " + dati[wildcards.sample][1])
-#-------------------------------------------------------------------------------
-
-#implementa un modo di scartare le contigs troppo corte dopo l'assembly
