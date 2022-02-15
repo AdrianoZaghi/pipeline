@@ -16,7 +16,7 @@ from trimmomatic_test_randreads import get_adapters, get_trimmomatic_test_data
 
 def into_dict(stream):
 	"""This function is used to organize in a dictionariey the informations in a .fastq file
-	It's argument is an Istream object, opened on a .fastq file
+	It's argument should be an input-stream object, opened on a .fastq file
 	It returns a dictionary with the following structure:
 		{<read name> : {"seq" : <string with the DNA sequence>, "qual" : <string with quality base score>}}
 	"""
@@ -37,7 +37,7 @@ def into_dict(stream):
 
 def contigs_into_dict(stream):
 	"""This function is used to organize in a dictionariey the informations in a contigs.fasta file
-        It's argument is an Istream object, opened on a contig.fastq file
+        It's argument should be an inpur-stream object, opened on a contig.fastq file
         It returns a dictionary with the following structure:
                 {<contig name> : <contig sequence>}
 	"""
@@ -84,10 +84,6 @@ class Trim_data:
 			self.tr_1 = into_dict(trimmed_1)
 			self.tr_2 = into_dict(trimmed_2)
 
-#	def __del__(self):
-#		os.system("rm " + "test_dir/" + self.name + "_1.fastq.gz " + "test_dir/" + self.name + "_2.fastq.gz")
-#		os.system("rm " + "test_dir/" + self.name + "_1_trimP.fastq " + "test_dir/" + self.name + "_2_trimP.fastq")
-
 class Bwt_data:
 	"""When an object of this class is constructed, the data characterized by "data_name" run accession are aligned with bowtie2. This won't happen if there is already, in the working directory, a file that contains the alignement result
 	The aligment have to be performed on trimmed data, and if there arent _trimP versions of the given run accession, those will be created performing the trimming also
@@ -105,12 +101,6 @@ class Bwt_data:
 			self.d_1 = into_dict(dati_1)
 			self.d_2 = into_dict(dati_2)
 			self.mapping = json.load(bwt)
-		#mapping qui è una lista
-
-#	def __del__(self):
-#		os.system("rm test_dir/" + self.name + "_bwt.overall_mapping_stats.txt")
-#		os.system("rm test_dir/" + self.name + "_bwt.allele_mapping_data.txt")
-#		os.system("rm test_dir/" + self.name + "_bwt.allele_mapping_data.json")
 
 class Spades_data:
 	"""When an object of this class is constructed, the data characterized by "data_name" run accession are assembled with Spades_rule, if is not already present an aligment for that run accession in the working directory
@@ -129,8 +119,6 @@ class Spades_data:
 			self.contigs = contigs_into_dict(contigs)
 			self.d_1 = into_dict(dati_1)
 			self.d_2 = into_dict(dati_2)
-#	def __del__(self):
-#		os.system("rm -r test_dir/" + self.name + "_assembly")
 
 class Main_data:
 	"""When an object of this class is constructed, the contigs characterized by "data_name" run accession are aligned, if there is not already in the working directory a file with alignemnt output
@@ -147,15 +135,13 @@ class Main_data:
 			self.contigs = contigs_into_dict(contigs)
 			self.mapping = json.load(main)
 
-#	def __del__(self):
-#		os.system("rm " + self.name + "_main.*")
-
 #----------------------------------------
 #	FIXTURES
 #-------------------------------------------------------------
 
 @pytest.fixture
 def trim_dati(name = "trim_test_data"):
+	"""After this function yelds the Trim_data objectr, it destroys all files created when it was constructed"""
 	yield Trim_data(name)
 	os.system("rm " + "test_dir/" + name + "_1.fastq.gz " + "test_dir/" + name + "_2.fastq.gz")
 	os.system("rm " + "test_dir/" + name + "_1_trimP.fastq " + "test_dir/" + name + "_2_trimP.fastq")
@@ -163,6 +149,7 @@ def trim_dati(name = "trim_test_data"):
 
 @pytest.fixture
 def bwt_dati(name = "bwt_test_data"):
+	"""After this function yelds the Bwt_data objectr, it destroys all files created when it was constructed"""
 	yield Bwt_data(name)
 	os.system("rm test_dir/" + name + "_bwt.overall_mapping_stats.txt")
 	os.system("rm test_dir/" + name + "_bwt.allele_mapping_data.txt")
@@ -170,16 +157,19 @@ def bwt_dati(name = "bwt_test_data"):
 
 @pytest.fixture
 def spades_dati(name = "reads_for_test_spades"):
+	"""After this function yelds the Spades_data objectr, it destroys all files created when it was constructed"""
 	yield Spades_data(name)
 	os.system("rm -r test_dir/" + name + "_assembly")
 
 @pytest.fixture
 def main_dati(name = "main_test_data"):
+	"""After this function yelds the Main_data objectr, it destroys all files created when it was constructed"""
 	yield Main_data(name)
 	os.system("rm " + name + "_main.*")
 
 @pytest.fixture
 def config():
+	"""This function yelds a yaml object that contains the informations about pipeline configurations"""
 	with open("config.yaml", mode = 'r', encoding = "utf-8") as stream:
 		yield yaml.safe_load(stream)
 

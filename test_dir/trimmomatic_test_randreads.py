@@ -76,8 +76,6 @@ def get_trimmomatic_test_data(adapter_1, adapter_2, file_name = "trim_test_data"
 			print(opposit[1], file = f_2)
 			print(opposit[2], file = f_2)
 			print(opposit[3], file = f_2)
-		f_1.close()
-		f_2.close()
 
 
 def get_adapters(adapters_file_path = "../adapters/NEXTflex_96.fa", adapter_number = 4):
@@ -98,7 +96,6 @@ def get_adapters(adapters_file_path = "../adapters/NEXTflex_96.fa", adapter_numb
 			linea = f.readline()
 		adapter_2 = f.readline()
 		adapter_2 = adapter_2[0:len(adapter_2)-1]
-		f.close()
 	return [adapter_1, adapter_2]
 
 #	COMANDO CONSIGLIATO

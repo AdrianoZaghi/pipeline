@@ -12,8 +12,6 @@ def split_contigs(how_many, inputname = "original_contigs.fasta"):
 				if line[0] == '>':
 					break
 				output.write(line)
-		input.close()
-		output.close()
 
 #	SUGGESTED COMAND
 

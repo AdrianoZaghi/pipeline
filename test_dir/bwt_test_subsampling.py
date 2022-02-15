@@ -41,10 +41,6 @@ def get_bwt_test_data(test_file = "bwt_test_data", origin = "ERR2241634", how_ma
 			for _ in range(4):
 				print(origin_1.readline(), file = f_1, end = '')
 				print(origin_2.readline(), file = f_2, end = '')
-		f_1.close()
-		f_2.close()
-		origin_1.close()
-		origin_2.close()
 	os.system("rm ../" + origin + "_1_trimP.fastq")
 	os.system("rm ../" + origin + "_2_trimP.fastq")
 
