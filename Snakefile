@@ -5,20 +5,19 @@ configfile: "config.yaml"
 
 dati = json.load(open("data_links.json"))
 
-#names sono usati per il report
+#The names that lables data_links.json entries are used to compose the report and should match the run_accession
 names = []
-
 for s in dati.keys():
-        names.append(s+"_1")
-        names.append(s+"_2")
-        names.append(s+"_1_trimP")
-        names.append(s+"_2_trimP")
+	names.append(s+"_1")
+	names.append(s+"_2")
+	names.append(s+"_1_trimP")
+	names.append(s+"_2_trimP")
 		
 
 rule main:
 	"""This rule perform the alignment of the contigs to Card and WildCard using rgi main. In the config.yaml file can be set the alignemnt tool
-	Input file	are the databases references, which are set up during installation, and the contig file resulting from the assembly
-	Output file	is a json file whic contains all the information resulting from the assembly. Also a txt version is produced.
+	Input file	are the databases references, which are set up in the /rgi repo during installation, and the contig file resulting from the assembly
+	Output file	is a json file whic contains all the information resulting from the assembly. Also a txt version is produced. Those files are found in the working directory at the end of execution
 	"""
 	input:
 		"{sample}_assembly/contigs.fasta",
@@ -31,7 +30,7 @@ rule main:
 	shell:
 		"""
 		cd rgi
-		rgi main -i ../{input} -o {wildcards.sample}_main -t contig -a {config[rgi_main_alignment_tool]} --clean -n {config[threads]} -d wgs --split_prodigal_jobs
+		rgi main -i ../{input[0]} -o {wildcards.sample}_main -t contig -a {config[rgi_main_alignment_tool]} --clean -n {config[threads]} -d wgs --split_prodigal_jobs
 		mv {wildcards.sample}_main.txt ../{wildcards.sample}_main.txt
 		mv {wildcards.sample}_main.json ../{wildcards.sample}_main.json
 		cd ..
@@ -40,7 +39,7 @@ rule main:
 rule assembly:
 	"""This rule compose the assembly of the trimmed read libraries using spades. In the config.yaml it can be set a limit for RAM usage and the K paramether
 	Input file	are the 2 pair end read libraries, both trimmed
-	Output file	are contained in the directory {run_accession}_assembly. Beside some information about assembly process, the most important file is contigs.fasta
+	Output file	are contained in the directory {run_accession}_assembly. It is created ad hoc in the working direcotry. Beside some information about assembly process, the most important file is contigs.fasta
 	"""
 	input:
 		"{sample}_1_trimP.fastq.gz",
@@ -55,7 +54,7 @@ rule assembly:
 rule rgi_bwt:
 	"""This rule perform the alignement of the trimmed reads to Card and WildCard databases using rgi bwt
 	Input file	are the databases references, which are set up during installation and the 2 pair end read libraries, both trimmed
-	Output file	is a json file whic contains all the information resulting from the assembly. Also a txt version is produced.
+	Output file	is a json file which contains all the information resulting from the alignment. Also a txt version is produced.
 	"""
 	input:
 		"{sample}_1_trimP.fastq.gz",
@@ -110,8 +109,8 @@ rule rgi_env_setup:
 
 rule trimmomatic:
 	"""This rule perform the pair end trimming of the read libraries eliminating the NextFles-96 adapters. Is used trimmomatic and all of it's parameters can be set in the config.yaml file.
-	Input files	are the non trimmed read libraries
-	Output files	are the trimmed read libraries
+	Input files	are the non trimmed pair ended read libraries
+	Output files	are the trimmed pair ended read libraries
 	"""
 	input:
 		"{sample}_1.fastq.gz",

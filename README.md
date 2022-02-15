@@ -4,7 +4,7 @@
 
 # PIPELINE INSTALLING
 
-In order to install all the tools used you should just clone this repo and run the pipeline for the first time. The only requirements are the previous installation of SNAKEAMAKE and ANACONDA (or MAMBA). During the installation will be set up the environment required for rgi to work. The installation is local and at the end of it a new *rgi/* repo will be found. It contains all the references to Card and WildCard  database. If you intend to execute the installation only, you can launch the command
+In order to install all the tools used, you should just clone this repo and run the pipeline for the first time. The only requirements are the previous installation of SNAKEAMAKE and ANACONDA (or MAMBA). During the installation will be set up the environment required for rgi to work. The installation is local and at the end of it a new *rgi/* repo will be found. It contains all the references to Card and WildCard  database. If you intend to execute the installation only, you can launch the command
 
 	snakemake rgi/card_annotation.log --core 10 --use-conda
 
@@ -12,12 +12,12 @@ In order to install all the tools used you should just clone this repo and run t
 
 The pipeline is made to align read libraries to the antibiotic resistance databases Card and WildCard. Input files should be pair end read libraries compressed (.gz). File names should be provided in the form of *<run_accession>*_n.fastq.gz, where “n” should be 1 or 2 depending if the reads in the library are the forward or the backward once of the sample. To perform the alignment can be used two different methods:
 - reads can be aligned directly to the references exploiting bowtie2
-- otherwise can be composed an assembly of those reads using Spades and than the resulting contigs are aligned to the references (using Dimond or Blast, depending on the configuration of the pipeline)
-To run entirely the pipeline (one of the two branches) you should add to the *data_links.json* file the links to the the online read libraries you intend to analyze, with the following sintax.
+- otherwise can be composed an assembly of those reads using Spades and then the resulting contigs are aligned to the references (using Dimond or Blast, depending on the configuration of the pipeline)
+To run entirely the pipeline (one of the two branches) you should add to the *data_links.json* file the links to the online read libraries you intend to analyze, with the following sintax.
 
 	"<run_accession>" : ["link_1", "link_2"]
 
-At the beginning of the execution, data will be downloaded in the working directory. Their filename should match the standard required, but is surely worth a check. The links actually present in the *data_links.json* file refers to data from a study performed by Munk ef all. [2018]. In case the data ere already on your device and have a correct filename, the pipeline will skip the downloads, but is still useful to fill the “<run_accession>” part of the *data_links.json* file. This will enable the report.
+At the beginning of the execution, data will be downloaded in the working directory. Their filename should match the standard required, but is surely worth a check. The links actually present in the *data_links.json* file refers to data from a study performed by Munk et all. [2018]. In case the data ere already on your device and have a correct filename, the pipeline will skip the downloads, but is still useful to fill the “<run_accession>” part of the *data_links.json* file. This will enable the report.
 
 # PIPELINE EXECUTION
 
@@ -40,7 +40,7 @@ At the end of the process will be found, in the working directory, the following
 - <run_accession>_main.json
 - <run_accession>_main.txt
 
-Both contain the results of the alignment. You should again refer to tgi documentation [link](https://github.com/arpcard/rgi#running-rgi-main-with-genome-or-assembly-dna-sequences) for the explanation of the content of those files. Depending from what the starting point of the analysis is, in the working directory will be found also all the files produced by the rules used in the alignment. Look at the picture of pipeline structure to figure out what they are.
+Both contain the results of the alignment. You should again refer to tgi documentation [link](https://github.com/arpcard/rgi#running-rgi-main-with-genome-or-assembly-dna-sequences) for the explanation of the content of those files. Depending from what the starting point of the analysis is, in the working directory will be found also all the files produced by the rules used in the alignment. Look at the picture of the pipeline structure to figure out what they are.
 
 It is possible to run each step of the pipeline singularly:
 
@@ -58,7 +58,7 @@ It is possible to run each step of the pipeline singularly:
 
 Is quite hard to estimate the computational resources required for each step of the pipeline, but all of them are quite expensive. Mainly the assembly. I suggest to execute reach step singularly, at the first usage.
 
-In the place of *"cores"* should be put the number of threads dedicated to pipeline execution. In the *config.yaml* file you can specify how many threads dedicate to the processing of a single sample (8 default), in case you are aligning more then one sample at once. In the same file are sett some other parameters for pipeline execution. Their meaning is explained in that file, but for more information you should refer to the documentation of those specific tools.
+In the place of *"cores"* should be put the number of threads dedicated to pipeline execution. In the *config.yaml* file you can specify how many threads dedicate to the processing of a single sample (8 default), in case you are aligning more then one sample at once. In the same file are set some other parameters for pipeline execution. Their meaning is explained in that file, but for more information you should refer to the documentation of those specific tools.
 - Ttimmomatic: [link](http://www.usadellab.org/cms/?page=trimmomatic)
 - Spades: [link](https://cab.spbu.ru/files/release3.15.2/manual.html)
 - Rgi: [link](https://github.com/arpcard/rgi#running-rgi-main-with-genome-or-assembly-dna-sequences)
@@ -83,9 +83,9 @@ Those graphs are obtained from FastQC [link](https://www.bioinformatics.babraham
 
 To test the functionality of the pipeline is used *pytest*. Ad hoc data are used to perform tests. Those can be found in the *test_dir* directory.
 
-- *trim_test_data* are generated using the script *trimmomatic_test_rendreads.py*. Those are .fastq file containing pair end reads randomly generated. Those have null superposition. In those reads are added the NextFlex-96 adapters.
+- *trim_test_data* were generated using the script *trimmomatic_test_rendreads.py*. Those are .fastq file containing pair end reads randomly generated. Those have null superposition. In those reads are added the NextFlex-96 adapters.
 
-- *bwt_test_data* is obtained subsampling the sample ERR2241634 (already trimmed). To do this have been used the script *bwt_test_subsampling.py*
+- *bwt_test_data* was obtained subsampling the sample ERR2241634 (already trimmed). To do this have been used the script *bwt_test_subsampling.py*
 
 - *reads_for_test_spades* have been created using ART_illumia. The command used is reported in *get_spades_test_data.sh* and require to have an *original_contig.fasta* file in *test_dir/*. Because of usual dimensions of .fasta file, original_contig.fasta is not included in this directory .Anyway whatever .fasta file can be used.
 
@@ -99,7 +99,7 @@ In case you want to test just a single rule of the pipeline is possible to speci
 
 	pytest test_dir/test_pipeline.py -m [marker]
 
-Possivle [marker] values are:
+Possible [marker] values are:
 - trimmomatic
 - bwt
 - spades
